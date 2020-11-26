@@ -5,12 +5,17 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -29,12 +34,26 @@ public class A_Lambdas {
      * that tests whether a string is longer than four characters.
      */
     @Test
-    @Ignore
+    // @Ignore
     public void a_predicate1() {
         final Predicate<String> pred = s -> s.length() > 4; // TODO
 
         assertTrue(pred.test("abcde"));
         assertFalse(pred.test("abcd"));
+        Math.floor(3.13f);
+        System.out.println(Math.round(new Double(3.13d)));
+        System.out.println(Math.round(3.73d));
+        System.out.println(Math.floor(3.13d));
+        System.out.println(Math.floor(3.73d));
+        Math.ceil(3.13f);
+        final Optional<String> s = Optional.of("test");
+        assertEquals(Optional.of("TEST"), s.map(String::toUpperCase));
+        final Optional<Integer> i = Optional.of(2);
+        assertEquals(Optional.of(4), i.map(item -> item * 2));
+
+        System.out.println((int) 2947483950d);
+        System.out.println((int) Double.parseDouble(Double.valueOf(2947483950.00).toString()));
+        System.out.println(Integer.MAX_VALUE);
     }
 
     /**
@@ -42,12 +61,34 @@ public class A_Lambdas {
      * that tests whether a string is empty.
      */
     @Test
-    @Ignore
+    // @Ignore
     public void a_predicate2() {
         final Predicate<String> pred = s -> s.isEmpty(); // TODO
 
         assertTrue(pred.test(""));
         assertFalse(pred.test("a"));
+
+        final List<List<String>> list = Arrays.asList(
+                Arrays.asList("a"),
+                Arrays.asList("b", "c"));
+        System.out.println(list);
+
+        System.out.println(list
+                .stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList()));
+
+        final List<String> flattenList = list
+                .stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
+        System.out.println(flattenList);
+        list
+                .stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList()).forEach(s -> System.out.println(s));
+
     }
 
     /**
@@ -257,7 +298,7 @@ public class A_Lambdas {
     @Test
     @Ignore
     public void d_supplier2() {
-		final Supplier<StringBuilder> sup = () -> new StringBuilder(); // TODO
+        final Supplier<StringBuilder> sup = () -> new StringBuilder(); // TODO
 
         assertEquals("", sup.get().toString());
     }
@@ -268,7 +309,7 @@ public class A_Lambdas {
     @Test
     @Ignore
     public void d_supplier3() {
-		final Supplier<StringBuilder> sup = StringBuilder::new; // TODO
+        final Supplier<StringBuilder> sup = StringBuilder::new; // TODO
 
         assertEquals("", sup.get().toString());
     }
@@ -281,7 +322,7 @@ public class A_Lambdas {
     @Test
     @Ignore
     public void e_bifunction1() {
-		final BiFunction<String, String, String> bifunc = (s1, s2) -> s1.concat(s2).concat(s1); // TODO
+        final BiFunction<String, String, String> bifunc = (s1, s2) -> s1.concat(s2).concat(s1); // TODO
 
         assertEquals("FirstSecondFirst", bifunc.apply("First", "Second"));
     }
@@ -316,7 +357,7 @@ public class A_Lambdas {
     @Test
     @Ignore
     public void e_bifunction3() {
-		final BiFunction<String, String, Integer> bifunc = String::indexOf; // TODO
+        final BiFunction<String, String, Integer> bifunc = String::indexOf; // TODO
 
         assertEquals(3, bifunc.apply("abcdefghij", "def").intValue());
         assertEquals(-1, bifunc.apply("abcdefghij", "xyz").intValue());
@@ -344,7 +385,7 @@ public class A_Lambdas {
         final StringBuilder sb = new StringBuilder("abc");
         final String suffix = "xyz";
 
-		final Runnable r = () -> sb.append(suffix); // TODO
+        final Runnable r = () -> sb.append(suffix); // TODO
 
         r.run();
         r.run();
@@ -359,9 +400,9 @@ public class A_Lambdas {
      * doesn't occur.
      */
     @Test
-    @Ignore
+    // @Ignore
     public void g_boundMethodRef1() {
-        final Function<String, Integer> func = null; // TODO
+        final Function<String, Integer> func = s -> "abcdefghij".indexOf(s); // TODO
 
         assertEquals(2, func.apply("cde").intValue());
         assertEquals(4, func.apply("efg").intValue());
@@ -386,9 +427,9 @@ public class A_Lambdas {
      * a classname on the left-hand side of the :: operator.
      */
     @Test
-    @Ignore
+    // @Ignore
     public void g_boundMethodRef2() {
-        final Function<String, Integer> func = null; // TODO
+        final Function<String, Integer> func = "abcdefghij"::indexOf; // TODO
 
         assertEquals(2, func.apply("cde").intValue());
         assertEquals(4, func.apply("efg").intValue());
