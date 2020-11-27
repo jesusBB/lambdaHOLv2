@@ -1,14 +1,13 @@
 package exercises;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Comparator;
 import java.util.function.IntBinaryOperator;
 
 import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import model.Person;
 
@@ -156,9 +155,9 @@ public class B_Comparators {
      * Try to write the comparator so as to avoid boxing of primitives.
      */
     @Test
-    @Ignore
+	// @Ignore
     public void comparator07() {
-        final Comparator<Person> comparebyAge = null; // TODO
+		final Comparator<Person> comparebyAge = Comparator.comparingInt(Person::getAge); // TODO
 
         assertTrue(comparebyAge.compare(michael, rod) < 0);
         assertTrue(comparebyAge.compare(paul, paul) == 0);
@@ -178,9 +177,9 @@ public class B_Comparators {
      * functional interface we use is IntBinaryOperator.
      */
     @Test
-    @Ignore
+	// @Ignore
     public void comparator08() {
-        final IntBinaryOperator intCompare = null; // TODO
+		final IntBinaryOperator intCompare = (i1, i2) -> i1 < i2 ? -1 : i1 == i2 ? 0 : 1; // TODO
 
         assertTrue(intCompare.applyAsInt(0, 1) < 0);
         assertTrue(intCompare.applyAsInt(1, 1) == 0);
@@ -199,9 +198,9 @@ public class B_Comparators {
      * a comparator.
      */
     @Test
-    @Ignore
+	// @Ignore
     public void comparator09() {
-        final IntBinaryOperator intCompare = null; // TODO
+		final IntBinaryOperator intCompare = Integer::compare; // TODO
 
         assertTrue(intCompare.applyAsInt(0, 1) < 0);
         assertTrue(intCompare.applyAsInt(1, 1) == 0);
@@ -227,9 +226,9 @@ public class B_Comparators {
      * and greater than any non-NaN value.
      */
     @Test
-    @Ignore
+	// @Ignore
     public void comparator10() {
-        final DoubleToIntBiFunction doubleCompare = null; // TODO
+		final DoubleToIntBiFunction doubleCompare = Double::compare; // TODO
 
         assertTrue(doubleCompare.applyAsInt(0.0, 1.0) < 0);
         assertTrue(doubleCompare.applyAsInt(1.0, 1.0) == 0);
