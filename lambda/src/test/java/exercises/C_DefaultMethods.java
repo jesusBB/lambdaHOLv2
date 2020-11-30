@@ -1,19 +1,21 @@
 package exercises;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.TreeMap;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /**
  * This set of exercises covers new default methods on
@@ -25,7 +27,8 @@ public class C_DefaultMethods {
      * Given a list of StringBuilders, modify each StringBuilder
      * in-place by appending the string "new" to each one.
      */
-    @Test @Ignore
+	@Test
+	// @Ignore
     public void c01_appendNew() {
         List<StringBuilder> sbList = List.of(
             new StringBuilder("alfa"),
@@ -33,6 +36,7 @@ public class C_DefaultMethods {
             new StringBuilder("charlie"));
 
         // TODO write code to modify sbList
+		sbList.forEach(item -> item.append("new"));
 
         assertEquals(List.of("alfanew", "bravonew", "charlienew"),
                      sbList.stream()
@@ -48,14 +52,16 @@ public class C_DefaultMethods {
     /**
      * Remove the words that have odd lengths from the list.
      */
-    @Test @Ignore
+	@Test
+	// @Ignore
     public void c02_removeOddLengthWords() {
         List<String> list = new ArrayList<>(Arrays.asList(
             "alfa", "bravo", "charlie", "delta", "echo", "foxtrot"));
 
         // TODO write code to modify list
+		list.removeIf(s -> (s.length() & 1) == 1);
 
-        assertEquals(List.of("alfa", "echo"), list);
+		assertEquals(List.of("alfa", "echo"), list);
     }
     // Hint:
     // <editor-fold defaultstate="collapsed">
@@ -66,13 +72,14 @@ public class C_DefaultMethods {
     /**
      * Replace every word in the list with its upper case equivalent.
      */
-    @Test @Ignore
+	@Test
+	// @Ignore
     public void c03_upcaseAllWords() {
         List<String> list = Arrays.asList(
             "alfa", "bravo", "charlie", "delta", "echo", "foxtrot");
 
         // TODO code to modify list
-
+		list.replaceAll(String::toUpperCase);
         assertEquals(List.of("ALFA", "BRAVO", "CHARLIE", "DELTA", "ECHO", "FOXTROT"),
                      list);
     }
@@ -87,7 +94,8 @@ public class C_DefaultMethods {
      * append to each StringBuilder the string representation of its corresponding
      * Integer key. This should mutate each StringBuilder value in-place.
      */
-    @Test @Ignore
+	@Test
+	// @Ignore
     public void c04_appendToMapValues() {
         Map<Integer, StringBuilder> map = new TreeMap<>();
         map.put(1, new StringBuilder("alfa"));
@@ -95,6 +103,7 @@ public class C_DefaultMethods {
         map.put(3, new StringBuilder("charlie"));
 
         // TODO write code to modify map
+		map.forEach((k, v) -> v.append(k.toString()));
 
         assertEquals(3, map.size());
         assertTrue(map.values().stream().allMatch(x -> x instanceof StringBuilder));
@@ -113,14 +122,16 @@ public class C_DefaultMethods {
      * append to each String the string representation of its corresponding
      * Integer key.
      */
-    @Test @Ignore
+	@Test
+	// @Ignore
     public void c05_replaceMapValues() {
         Map<Integer, String> map = new TreeMap<>();
         map.put(1, "alfa");
         map.put(2, "bravo");
         map.put(3, "charlie");
 
-        // TODO write code to modify map
+//		map.forEach((k, v) -> v.concat(k.toString()));
+		map.replaceAll((k, v) -> v.concat(k.toString()));
 
         assertEquals(Map.of(1, "alfa1",
                             2, "bravo2",
@@ -137,7 +148,8 @@ public class C_DefaultMethods {
      * Given a list of words, populate a map whose keys are the lengths of
      * each word, and whose values are list of words with that length.
      */
-    @Test @Ignore
+	@Test
+	// @Ignore
     public void c06_mapOfListOfStringsByLength() {
         List<String> list = List.of(
             "aardvark", "bison", "capybara",
@@ -146,6 +158,7 @@ public class C_DefaultMethods {
         Map<Integer, List<String>> result = new TreeMap<>();
 
         // TODO write code to populate result
+		// list.forEach(result.co);
 
         assertEquals(Map.of( 5, List.of("bison"),
                              6, List.of("avocet"),
@@ -343,4 +356,27 @@ public class C_DefaultMethods {
     // Check the Map.compute() default method, read the Javadoc carefully
     // for the handling of null values returned from the function.
     // </editor-fold>
+
+	@Test
+    public void method() {
+		List<Integer> ints = new Random().ints(70000000, 0, 2000000)
+	            .mapToObj(Integer::valueOf)
+	            .collect(Collectors.toList());
+    	
+		Predicate<Integer> checkOddUsingModule = s -> s % 2 != 0;
+		// list.removeIf(checkOddUsingModule);
+		Predicate<Integer> checkOddUsingXOR = s -> (s & 1) == 1;
+
+		StopWatch watch = new StopWatch();
+		watch.start();
+		System.out.println(ints.stream().filter(checkOddUsingModule).toArray().length);
+		watch.stop();
+		System.out.println("Time2: " + watch.getTime());
+
+		watch.reset();
+		watch.start();
+		System.out.println(ints.stream().filter(checkOddUsingXOR).toArray().length);
+		watch.stop();
+		System.out.println("Time1: " + watch.getTime());
+    }
 }
