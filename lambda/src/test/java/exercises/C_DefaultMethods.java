@@ -268,7 +268,7 @@ public class C_DefaultMethods {
      * Write the code to do that.
      */
     @Test
-    @Ignore
+    // @Ignore
     public void c10_mapReplaceEmptyValues() {
         final List<String> keys = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
         final Map<String, String> map = new HashMap<>(Map.of("a", "alfa",
@@ -280,6 +280,8 @@ public class C_DefaultMethods {
                 "g", ""));
 
         // TODO write code to fix the map
+        // keys.forEach(key -> map.remove(key, ""));
+        keys.forEach(key -> map.replace(key, "", key));
 
         assertEquals(Map.of("a", "alfa",
                 "b", "bravo",
@@ -302,7 +304,7 @@ public class C_DefaultMethods {
      * same as the key.
      */
     @Test
-    @Ignore
+    // @Ignore
     public void c11_computeWithMissingEntries() {
         final List<String> keys = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
         final Map<String, String> map = new HashMap<>(Map.of("a", "alfa",
@@ -311,6 +313,12 @@ public class C_DefaultMethods {
                 "d", "delta"));
 
         // TODO write code transform the map
+
+        // Solution 1
+        // keys.forEach(key -> map.compute(key, (k, v) -> v == null ? k : v.toUpperCase()));
+
+        // Solution 2
+        keys.forEach(key -> map.merge(key, key, (existingValue, k) -> existingValue.toUpperCase()));
 
         assertEquals(Map.of("a", "ALFA",
                 "b", "BRAVO",
@@ -334,7 +342,7 @@ public class C_DefaultMethods {
      * for which the values are the empty string.
      */
     @Test
-    @Ignore
+    // @Ignore
     public void c12_computeAndRemoveSomeEntries() {
         final List<String> keys = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
         final Map<String, String> map = new HashMap<>(Map.of("a", "alfa",
@@ -346,6 +354,7 @@ public class C_DefaultMethods {
                 "g", ""));
 
         // TODO write code transform the map
+        keys.forEach(key -> map.compute(key, (k, v) -> StringUtils.EMPTY.equals(v) ? null : v.toUpperCase()));
 
         assertEquals(Map.of("a", "ALFA",
                 "b", "BRAVO",
@@ -360,7 +369,7 @@ public class C_DefaultMethods {
     // </editor-fold>
 
     @Test
-    public void method() {
+    public void testingXORvsModuleCalculation() {
         final List<Integer> ints = new Random().ints(70000000, 0, 2000000)
                 .mapToObj(Integer::valueOf)
                 .collect(Collectors.toList());
