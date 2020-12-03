@@ -64,7 +64,7 @@ public class D_SimpleStreams {
         final List<String> input = List.of(
                 "alfa", "bravo", "charlie", "delta", "echo", "foxtrot");
 
-        final String result = input.stream().skip(2).limit(3).map(s -> s.substring(1, 2)).collect(Collectors.joining(",")); // TODO
+        final String result = input.stream().skip(2).limit(3).map(s -> s.substring(1, 2)).collect(Collectors.joining(","));
 
         assertEquals("h,e,c", result);
     }
@@ -87,7 +87,7 @@ public class D_SimpleStreams {
     @Test
     @Ignore
     public void d3_countLinesInFile() throws IOException {
-        final long count = 0; // TODO
+        final long count = reader.lines().count(); // TODO
 
         assertEquals(14, count);
     }
@@ -106,9 +106,9 @@ public class D_SimpleStreams {
      * @throws IOException
      */
     @Test
-    @Ignore
+    // @Ignore
     public void d4_findLengthOfLongestLine() throws IOException {
-        final int longestLength = 0; // TODO
+        final int longestLength = reader.lines().mapToInt(String::length).max().orElse(0);// TODO
 
         assertEquals(53, longestLength);
     }
@@ -134,7 +134,7 @@ public class D_SimpleStreams {
     @Test
     @Ignore
     public void d5_findLongestLine() throws IOException {
-        final String longest = null; // TODO
+        final String longest = reader.lines().max(Comparator.comparing(String::length)).orElse(""); // TODO
 
         assertEquals("Feed'st thy light's flame with self-substantial fuel,", longest);
     }
@@ -152,12 +152,14 @@ public class D_SimpleStreams {
      * whose lengths are equal to the maximum word length.
      */
     @Test
-    @Ignore
+    // @Ignore
     public void d6_selectLongestWords() {
         final List<String> input = List.of(
                 "alfa", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel");
 
-        final List<String> result = null; // TODO
+        final int max = input.stream().mapToInt(String::length).max().orElse(-1);
+
+        final List<String> result = input.stream().filter(s -> s.length() == max).collect(Collectors.toList()); // TODO
 
         assertEquals(List.of("charlie", "foxtrot"), result);
     }
@@ -171,12 +173,13 @@ public class D_SimpleStreams {
      * the word's position in the list (starting from zero) .
      */
     @Test
-    @Ignore
+    // @Ignore
     public void d7_selectByLengthAndPosition() {
         final List<String> input = List.of(
                 "alfa", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel");
 
-        final List<String> result = null; // TODO
+        final List<String> result = IntStream.range(0, input.size()).filter(index -> input.get(index).length() > index).mapToObj(index -> input.get(index))
+                .collect(Collectors.toList()); // TODO
 
         assertEquals(List.of("alfa", "bravo", "charlie", "delta", "foxtrot"), result);
     }
