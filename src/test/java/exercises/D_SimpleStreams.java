@@ -1,11 +1,12 @@
 package exercises;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,12 +14,7 @@ import java.util.stream.IntStream;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /**
  * This set of exercises covers simple stream pipelines,
@@ -32,12 +28,16 @@ public class D_SimpleStreams {
      * Given a list of words, create an output list that contains
      * only the odd-length words, converted to upper case.
      */
-    @Test @Ignore
+    @Test
+    // @Ignore
     public void d1_upcaseOddLengthWords() {
         List<String> input = List.of(
-            "alfa", "bravo", "charlie", "delta", "echo", "foxtrot");
+                "alfa", "bravo", "charlie", "delta", "echo", "foxtrot");
 
-        List<String> result = null; // TODO
+        List<String> result = input.stream()
+                .filter(s -> s.length() % 2 != 0)
+                .map(String::toUpperCase)
+                .collect(Collectors.toList()); // TODO
 
         assertEquals(List.of("BRAVO", "CHARLIE", "DELTA", "FOXTROT"), result);
     }
@@ -51,18 +51,22 @@ public class D_SimpleStreams {
     // predefined collectors on the Collectors class.
     // </editor-fold>
 
-
     /**
      * Take the third through fifth words of the list, extract the
      * second letter from each, and join them, separated by commas,
      * into a single string. Watch for off-by-one errors.
      */
-    @Test @Ignore
-    public void d2_joinStreamRange() {
+    @Test
+    // @Ignore
+    public void J() {
         List<String> input = List.of(
-            "alfa", "bravo", "charlie", "delta", "echo", "foxtrot");
+                "alfa", "bravo", "charlie", "delta", "echo", "foxtrot");
 
-        String result = ""; // TODO
+        String result = input.stream()
+                .skip(2)
+                .limit(3)
+                .map(s -> String.valueOf(s.charAt(1)))
+                .collect(Collectors.joining(",")); // TODO
 
         assertEquals("h,e,c", result);
     }
@@ -75,7 +79,6 @@ public class D_SimpleStreams {
     // Use Collectors.joining().
     // </editor-fold>
 
-
     /**
      * Count the number of lines in the text file. (Remember to
      * use the BufferedReader named "reader" that has already been
@@ -83,9 +86,10 @@ public class D_SimpleStreams {
      *
      * @throws IOException
      */
-    @Test @Ignore
+    @Test
+    // @Ignore
     public void d3_countLinesInFile() throws IOException {
-        long count = 0; // TODO
+        long count = reader.lines().count(); // TODO
 
         assertEquals(14, count);
     }
@@ -98,15 +102,18 @@ public class D_SimpleStreams {
     // Use Stream.count().
     // </editor-fold>
 
-
     /**
      * Find the length of the longest line in the text file.
      *
      * @throws IOException
      */
-    @Test @Ignore
+    @Test
+    // @Ignore
     public void d4_findLengthOfLongestLine() throws IOException {
-        int longestLength = 0; // TODO
+        int longestLength = reader.lines()
+                .mapToInt(String::length)
+                .max()
+                .orElse(0); // TODO
 
         assertEquals(53, longestLength);
     }
@@ -124,17 +131,20 @@ public class D_SimpleStreams {
     // (that is, where it has no value).
     // </editor-fold>
 
-
     /**
      * Find the longest line in the text file.
      *
      * @throws IOException
      */
-    @Test @Ignore
+    @Test
+    // @Ignore
     public void d5_findLongestLine() throws IOException {
-        String longest = null; // TODO
+        String longest = reader.lines()
+                .max(Comparator.comparing(String::length))
+                .orElse(""); // TODO
 
-        assertEquals("Feed'st thy light's flame with self-substantial fuel,", longest);
+        assertEquals("Feed'st thy light's flame with self-substantial fuel,",
+                longest);
     }
     // Hint 1:
     // <editor-fold defaultstate="collapsed">
@@ -145,17 +155,22 @@ public class D_SimpleStreams {
     // Use static methods on Comparator to help create a Comparator instance.
     // </editor-fold>
 
-
     /**
      * Select the longest words from the input list. That is, select the words
      * whose lengths are equal to the maximum word length.
      */
-    @Test @Ignore
+    @Test
+    // @Ignore
     public void d6_selectLongestWords() {
         List<String> input = List.of(
-            "alfa", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel");
+                "alfa", "bravo", "charlie", "delta", "echo", "foxtrot", "golf",
+                "hotel");
 
-        List<String> result = null; // TODO
+        int max = input.stream().mapToInt(String::length).max().orElse(-1);
+
+        List<String> result = input.stream()
+                .filter(s -> s.length() == max)
+                .collect(Collectors.toList()); // TODO
 
         assertEquals(List.of("charlie", "foxtrot"), result);
     }
@@ -168,14 +183,20 @@ public class D_SimpleStreams {
      * Select the list of words from the input list whose length is greater than
      * the word's position in the list (starting from zero) .
      */
-    @Test @Ignore
+    @Test
+    // @Ignore
     public void d7_selectByLengthAndPosition() {
         List<String> input = List.of(
-            "alfa", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel");
+                "alfa", "bravo", "charlie", "delta", "echo", "foxtrot", "golf",
+                "hotel");
 
-        List<String> result = null; // TODO
+        List<String> result = IntStream.range(0, input.size())
+                .filter(pos -> input.get(pos).length() > pos)
+                .mapToObj(pos -> input.get(pos))
+                .collect(Collectors.toList()); // TODO
 
-        assertEquals(List.of("alfa", "bravo", "charlie", "delta", "foxtrot"), result);
+        assertEquals(List.of("alfa", "bravo", "charlie", "delta", "foxtrot"),
+                result);
     }
     // Hint:
     // <editor-fold defaultstate="collapsed">
@@ -183,12 +204,10 @@ public class D_SimpleStreams {
     // the input list, using index values to get elements from the input list.
     // </editor-fold>
 
-
-// ========================================================
-// END OF EXERCISES
-// TEST INFRASTRUCTURE IS BELOW
-// ========================================================
-
+    // ========================================================
+    // END OF EXERCISES
+    // TEST INFRASTRUCTURE IS BELOW
+    // ========================================================
 
     private BufferedReader reader;
 

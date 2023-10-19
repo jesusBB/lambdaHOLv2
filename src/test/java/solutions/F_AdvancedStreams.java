@@ -244,7 +244,7 @@ public class F_AdvancedStreams {
 
     /**
      * Given a stream of strings, accumulate (collect) them into the result string
-     * by inserting the input string at both the beginning and end. For example, given
+     *x` by inserting the input string at both the beginning and end. For example, given
      * input strings "x" and "y" the result should be "yxxy". Note: the input stream
      * is a parallel stream, so you MUST write a proper combiner function to get the
      * correct result.

@@ -50,6 +50,9 @@ public class F_AdvancedStreams {
     public void f1_mapLengthToWordList() throws IOException {
         Map<Integer, List<String>> result = null; // TODO
 
+        result = reader.lines().flatMap(line -> SPLIT_PATTERN.splitAsStream(line)).collect(Collectors.groupingBy(word -> word.length()));
+
+
         assertEquals(10, result.get(7).size());
         assertEquals(Set.of("beauty's", "increase", "ornament"), new HashSet<>(result.get(8)));
         assertEquals(Set.of("abundance", "creatures"), new HashSet<>(result.get(9)));
@@ -75,6 +78,8 @@ public class F_AdvancedStreams {
     @Test @Ignore
     public void f2_mapLengthToWordCount() throws IOException {
         Map<Integer, Long> result = null; // TODO
+
+        result = reader.lines().flatMap(line -> SPLIT_PATTERN.splitAsStream(line)).collect(Collectors.groupingBy(word -> word.length(), Collectors.counting()));
 
         assertEquals(Map.ofEntries(entry( 1,  1L),
                                    entry( 2, 11L),
@@ -111,6 +116,19 @@ public class F_AdvancedStreams {
     @Test @Ignore
     public void f3_wordFrequencies() throws IOException {
         Map<String, Long> result = null; // TODO
+
+      //  result = reader.lines().flatMap(line -> SPLIT_PATTERN.splitAsStream(line)).collect(Collectors.groupingBy(word -> word, Collectors.counting()));
+       // result = reader.lines().flatMap(line -> SPLIT_PATTERN.splitAsStream(line)).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        //toMap() alternative solution
+
+        result = reader.lines().flatMap(line -> SPLIT_PATTERN.splitAsStream(line)).collect(Collectors.toMap(Function.identity(), word -> 1L, Long::sum));
+
+
+        //result = reader.lines().flatMap(line -> SPLIT_PATTERN.splitAsStream(line)).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        System.out.println(result);
+
 
         assertEquals(2L, (long)result.get("tender"));
         assertEquals(6L, (long)result.get("the"));
@@ -181,8 +199,10 @@ public class F_AdvancedStreams {
     public void f5_separateOddEvenSums() {
         IntStream input = new Random(987523).ints(20, 0, 100);
 
-        int sumEvens = 0; // TODO
-        int sumOdds  = 0; // TODO
+        Map<Boolean, Integer> results = input.boxed().collect(Collectors.partitioningBy(i -> (i % 2 == 0), Collectors.summingInt(i -> i)));
+
+        int sumEvens = results.get(true);
+        int sumOdds  = results.get(false);
 
         assertEquals(516, sumEvens);
         assertEquals(614, sumOdds);
@@ -209,14 +229,37 @@ public class F_AdvancedStreams {
     public void f6_insertBeginningAndEnd() {
         Stream<String> input = List.of(
             "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
-            "k", "l", "m", "n", "o", "p", "q", "r", "s", "t")
-            .parallelStream();
+            "k", "l", "m", "n", "o", "p", "q", "r", "s", "t").stream();
+            //.parallelStream();
 
-        String result = input.collect(null, null, null).toString();
+
+
+        String result = input.collect(StringBuilder::new, (sb, s) -> {System.out.println(s);sb.insert(0, s).append(s);
+            System.out.println(sb.toString());}, (sb1, sb2) -> {int half = sb2.length() / 2;
+            sb1.insert(0, sb2.substring(0, half));
+            sb1.append(sb2.substring(half));
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");}).toString();
+        System.out.println(result);
+
+        List<String> vowels = List.of("a", "e", "i", "o", "u");
+
+// sequential stream - nothing to combine
+        StringBuilder result2 = vowels.stream().collect(StringBuilder::new, (x, y) -> x.append(y),
+                (a, b) -> a.append(",").append(b));
+        System.out.println(result2.toString());
+
         // TODO fill in lambda expressions or method references
         // in place of the nulls in the line above.
 
+        List<String> list = Arrays.asList("Mike", "Nicki", "John");
+        String s = list.stream().collect(StringBuilder::new,
+                (sb, s1) -> sb.append(" ").append(s1).append(" ,"),
+                (sb1, sb2) -> sb1.append(sb2.toString())).toString();
+        System.out.println(s);
+
         assertEquals("tsrqponmlkjihgfedcbaabcdefghijklmnopqrst", result);
+
+
     }
     // Hint 1:
     // <editor-fold defaultstate="collapsed">
